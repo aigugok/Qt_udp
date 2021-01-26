@@ -1,0 +1,98 @@
+#include "read_flash.h"
+#include "stdint.h"
+//#include "UDP_test.h"
+#include "udp_.h"
+
+
+typedef struct  {
+    uint32_t size;
+    uint32_t header;
+    uint32_t command;
+    uint32_t addr;
+    uint8_t data[256];
+
+}data_struct;
+
+Write_Flash::Write_Flash()
+{   next_address=0;
+    new_size=0;
+    cur_size=0;
+    all_size=0;
+   cur_address_for_data=0;
+   start_address=0;
+    arraPtr=0;
+
+
+}
+Read_Flash::~Read_Flash(){
+    qDebug()<<"~Read_Flash";
+  if(arraPtr!=0){delete[] arraPtr;}
+
+}
+//0x08000000
+void Read_Flash::CurrentRead( uint32_t addr,  uint32_t size){
+
+    if (addr>start_address){
+    cur_address_for_data=addr-256*3;}
+    else{cur_address_for_data=start_address;}
+    if(size>256){new_size=size-256;
+        next_address=addr+256*4;
+        cur_size=256;}
+    else{next_address=0;
+        new_size=0;
+        cur_size=size;}
+
+   data_struct paket;
+   paket.size=cur_size;
+   paket.command=0001;
+   paket.addr=addr;
+   qDebug()<<"Hello----"<<paket.size;
+   qDebug()<<"start_address"<<paket.addr<<" "<<next_address;
+   emit send_pack((char*) &paket, sizeof(paket));
+
+}
+
+void Read_Flash::StartRead( uint32_t addr,  uint32_t size){
+     all_size=size;
+     start_address=addr;
+     if(arraPtr!=0){qDebug()<<"~Read_Flash";
+         delete[] arraPtr;}
+     arraPtr=new quint32[all_size];
+     CurrentRead(start_address, all_size);
+}
+
+
+
+
+typedef struct  {
+    quint32 acception_size;
+    quint32 acception_header;
+    quint32 acception_data[64];
+}acception_data;
+
+
+void Read_Flash::ProccessData(char *Data,quint32 sizedata){
+    acception_data *data_on_plata=(acception_data*) Data;
+    quint32 check_size=sizedata-sizeof(data_on_plata->acception_header)-sizeof(data_on_plata->acception_size)-4*sizeof(data_on_plata->acception_data);
+
+    if (data_on_plata->acception_header!=5 && check_size!=0 ){
+        send_udp_messangers((char*) Data);
+        //~Read_Flash();
+    return;
+    }
+
+    for(quint32 i=0; i<cur_size; i++){
+   arraPtr[cur_address_for_data-start_address+i]=data_on_plata->acception_data[i];
+   // qDebug()<<cur_address_for_data-start_address+i<<"saved_data"<<QString::number(arraPtr[cur_address_for_data-start_address+i], 16);
+    }
+
+    if(next_address!=0 && new_size!=0){
+        CurrentRead(next_address, new_size);}
+    else{
+        for(quint32 i=0; i<all_size; i++){
+        qDebug()<<i<<"saved_data"<<QString::number(arraPtr[i], 16); }
+        emit send_hexdata( start_address,(char*) arraPtr, all_size);
+
+    }
+
+}
