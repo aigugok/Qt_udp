@@ -69,7 +69,7 @@ void ThreadUdp::connectToServer(quint16 _port)
 void ThreadUdp::stop()
 {
     quit = true;
-    udpSocket.close();
+    udpSocket->close();
     emit finished();
 }
 
@@ -78,9 +78,10 @@ void ThreadUdp::process()
     int OptVal = 1024 * 64 * 1024;
     int OptLen = sizeof(OptLen);
 
-    udpSocket.bind(QHostAddress::Any, port+2);
-    setsockopt(udpSocket.socketDescriptor(), SOL_SOCKET, SO_RCVBUF, (char *) &OptVal, OptLen);
-    connect(&udpSocket, SIGNAL(readyRead()), this, SLOT(read()));
+    udpSocket=new QUdpSocket;
+    udpSocket->bind(QHostAddress::Any, port+2);
+    setsockopt(udpSocket->socketDescriptor(), SOL_SOCKET, SO_RCVBUF, (char *) &OptVal, OptLen);
+    connect(udpSocket, SIGNAL(readyRead()), this, SLOT(read()));
 }
 
 void ThreadUdp::change_ip(QString new_ip){
@@ -92,8 +93,8 @@ void ThreadUdp::send_pack(char *buf, int size)
 {
     QString str = QString::number(ip4);
     QHostAddress adr=QHostAddress(current_ip);
-    udpSocket.writeDatagram(buf, size, adr, 10000);
-     //qDebug()<<"send---- ";
+    udpSocket->writeDatagram(buf, size, adr, port);
+    //qDebug()<<"send---- ";
 }
 
 
@@ -101,8 +102,8 @@ void ThreadUdp::read()
 {
     quint32 size;
     quint16 localPort = 0;
-    if (udpSocket.hasPendingDatagrams() == true) {
-        size = udpSocket.readDatagram((char *) rxData, 1400, &currentIP, &localPort);
+    if (udpSocket->hasPendingDatagrams() == true) {
+        size = udpSocket->readDatagram((char *) rxData, 1400, &currentIP, &localPort);
         rxData[size]=0;
 
         if ((localPort != port) && (localPort != port + 2)) {

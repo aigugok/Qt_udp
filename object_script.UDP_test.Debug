@@ -3,7 +3,6 @@ debug/hex_writing.o
 debug/main.o
 debug/plata_read_write.o
 debug/read_dop_window.o
-debug/start_dop_window.o
 debug/stm_ip_dop_window.o
 debug/udp_.o
 debug/write_dop_window.o
@@ -11,7 +10,6 @@ debug/moc_UDP_test.o
 debug/moc_hex_writing.o
 debug/moc_plata_read_write.o
 debug/moc_read_dop_window.o
-debug/moc_start_dop_window.o
 debug/moc_stm_ip_dop_window.o
 debug/moc_udp_.o
 debug/moc_write_dop_window.o

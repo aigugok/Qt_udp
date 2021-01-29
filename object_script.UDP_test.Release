@@ -3,7 +3,6 @@ release/hex_writing.o
 release/main.o
 release/plata_read_write.o
 release/read_dop_window.o
-release/start_dop_window.o
 release/stm_ip_dop_window.o
 release/udp_.o
 release/write_dop_window.o
@@ -11,7 +10,6 @@ release/moc_UDP_test.o
 release/moc_hex_writing.o
 release/moc_plata_read_write.o
 release/moc_read_dop_window.o
-release/moc_start_dop_window.o
 release/moc_stm_ip_dop_window.o
 release/moc_udp_.o
 release/moc_write_dop_window.o

@@ -34,12 +34,11 @@ class ThreadUdp : public QObject {
 public:
     ThreadUdp(int ip=50);
     ~ThreadUdp();
-    void connectToServer(quint16 _port = 12000);
+
     //	void run();
     void stop();
     int get(char* data);
-
-    QUdpSocket udpSocket;
+    QUdpSocket* udpSocket;
     QHostAddress currentIP;
     QString current_ip="192.168.1.50";
     char rxData[8000];
@@ -48,10 +47,9 @@ public slots:
     void read();
     void send_pack(char* buf,int size);
     void change_ip(QString new_ip);
-
+    void connectToServer(quint16 _port = 12000);
 signals:
     void finished();
-    void errorUdp(QString errorMessage);
     void UdpPack_rcv(char* rxData,quint32 sizedata);
     //void UdpPack_rcv(acception_data*, quint32);
 private:
@@ -63,7 +61,6 @@ private:
     quint16 port;
     robot_data_type* dataBuf;
     int ip4;
-
 };
 
 #endif /* UDP_H_ */

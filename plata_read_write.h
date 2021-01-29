@@ -3,38 +3,55 @@
 
 #include <QObject>
 #include <QTimer>
+#include "udp_.h"
+
 
 class plata_read_write : public QObject
 {
     Q_OBJECT
+
 public:
     explicit plata_read_write(QObject *parent = nullptr);
      ~plata_read_write(void);
+
 public slots:
     void Start_Writing(int size, int adress, uint8_t* data);
     void StartRead(uint32_t addr,  uint32_t size, QString fileout);
     void STM_responces(char* Data,quint32 sizedata);
+    void Check_Power(quint32 header);
+    void Start_struct(void);
+    void Change_ip(QString ip);
+    void Check_info(void);
 
 signals:
     void send_command(char* a, int b);
     void next_segment(int segment);
     void Progress_bar(int current_size);
     void send_udp_messangers(char* Data);
+    void send_info_text(char* Data);
+    void send_not_connected_text(char* Data);
     void send_udp_check_power_flag(quint32 header);
     void write_readen_array( uint32_t start_address, char* data, uint32_t datasize,QString fileout);
     void print_to_info(QString a);
+    void buttons_enable(bool);
+    void ip_change(QString ip);
+
 
 private slots:
     void First_sending(void);
     void Repead_sending(void);
     void Repead_fl_sending(void);
     void Update_segment_number(void);
+    void Send_Check_Power(void);
 
 private:
+    int power_counter=2;
+    int first_plata_on=0;
+
     typedef struct  {
-        uint32_t size;
         uint32_t header;
         uint32_t command;
+        uint32_t size;
         uint32_t addr;
         uint8_t data[256];
     }data_struct;
@@ -66,6 +83,8 @@ private:
     QTimer timer_repead_writing;
     QTimer timer_repead_reading;
     quint32* rd_arraPtr;
+    ThreadUdp* _udp;
+    QThread *handlerThread;
 
     void CurrentRead(uint32_t addr,  uint32_t size);
     void Flags(quint32 header);

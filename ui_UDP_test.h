@@ -11,14 +11,14 @@
 
 #include <QtCore/QVariant>
 #include <QtWidgets/QApplication>
-#include <QtWidgets/QFormLayout>
 #include <QtWidgets/QHBoxLayout>
+#include <QtWidgets/QLabel>
+#include <QtWidgets/QLineEdit>
 #include <QtWidgets/QMainWindow>
 #include <QtWidgets/QMenuBar>
 #include <QtWidgets/QProgressBar>
 #include <QtWidgets/QPushButton>
 #include <QtWidgets/QStatusBar>
-#include <QtWidgets/QTextEdit>
 #include <QtWidgets/QVBoxLayout>
 #include <QtWidgets/QWidget>
 
@@ -28,19 +28,20 @@ class Ui_EMA_V2Class
 {
 public:
     QWidget *centralwidget;
-    QHBoxLayout *horizontalLayout_2;
-    QVBoxLayout *verticalLayout_3;
+    QWidget *layoutWidget;
     QVBoxLayout *verticalLayout;
-    QFormLayout *formLayout_2;
-    QPushButton *TextEdit_Clear;
     QPushButton *STM_IP;
-    QPushButton *Info;
-    QTextEdit *textEdit;
     QPushButton *Read;
     QPushButton *Write;
+    QHBoxLayout *horizontalLayout;
+    QLabel *label;
+    QLineEdit *stm_serais;
+    QHBoxLayout *horizontalLayout_2;
+    QLabel *label_2;
+    QLineEdit *version;
     QProgressBar *progressBar;
     QPushButton *Start;
-    QHBoxLayout *horizontalLayout_3;
+    QLabel *not_connected;
     QMenuBar *menubar;
     QStatusBar *statusbar;
 
@@ -49,81 +50,89 @@ public:
         if (EMA_V2Class->objectName().isEmpty())
             EMA_V2Class->setObjectName(QString::fromUtf8("EMA_V2Class"));
         EMA_V2Class->setEnabled(true);
-        EMA_V2Class->resize(379, 428);
+        EMA_V2Class->resize(250, 266);
         centralwidget = new QWidget(EMA_V2Class);
         centralwidget->setObjectName(QString::fromUtf8("centralwidget"));
-        horizontalLayout_2 = new QHBoxLayout(centralwidget);
-        horizontalLayout_2->setObjectName(QString::fromUtf8("horizontalLayout_2"));
-        verticalLayout_3 = new QVBoxLayout();
-        verticalLayout_3->setObjectName(QString::fromUtf8("verticalLayout_3"));
-
-        horizontalLayout_2->addLayout(verticalLayout_3);
-
-        verticalLayout = new QVBoxLayout();
+        layoutWidget = new QWidget(centralwidget);
+        layoutWidget->setObjectName(QString::fromUtf8("layoutWidget"));
+        layoutWidget->setGeometry(QRect(9, 9, 224, 214));
+        verticalLayout = new QVBoxLayout(layoutWidget);
         verticalLayout->setObjectName(QString::fromUtf8("verticalLayout"));
-        formLayout_2 = new QFormLayout();
-        formLayout_2->setObjectName(QString::fromUtf8("formLayout_2"));
-        TextEdit_Clear = new QPushButton(centralwidget);
-        TextEdit_Clear->setObjectName(QString::fromUtf8("TextEdit_Clear"));
-
-        formLayout_2->setWidget(0, QFormLayout::SpanningRole, TextEdit_Clear);
-
-
-        verticalLayout->addLayout(formLayout_2);
-
-        STM_IP = new QPushButton(centralwidget);
+        verticalLayout->setContentsMargins(0, 0, 0, 0);
+        STM_IP = new QPushButton(layoutWidget);
         STM_IP->setObjectName(QString::fromUtf8("STM_IP"));
 
         verticalLayout->addWidget(STM_IP);
 
-        Info = new QPushButton(centralwidget);
-        Info->setObjectName(QString::fromUtf8("Info"));
-        Info->setEnabled(false);
-
-        verticalLayout->addWidget(Info);
-
-        textEdit = new QTextEdit(centralwidget);
-        textEdit->setObjectName(QString::fromUtf8("textEdit"));
-
-        verticalLayout->addWidget(textEdit);
-
-        Read = new QPushButton(centralwidget);
+        Read = new QPushButton(layoutWidget);
         Read->setObjectName(QString::fromUtf8("Read"));
         Read->setEnabled(false);
 
         verticalLayout->addWidget(Read);
 
-        Write = new QPushButton(centralwidget);
+        Write = new QPushButton(layoutWidget);
         Write->setObjectName(QString::fromUtf8("Write"));
         Write->setEnabled(false);
 
         verticalLayout->addWidget(Write);
 
-        progressBar = new QProgressBar(centralwidget);
+        horizontalLayout = new QHBoxLayout();
+        horizontalLayout->setObjectName(QString::fromUtf8("horizontalLayout"));
+        label = new QLabel(layoutWidget);
+        label->setObjectName(QString::fromUtf8("label"));
+        label->setEnabled(true);
+
+        horizontalLayout->addWidget(label);
+
+        stm_serais = new QLineEdit(layoutWidget);
+        stm_serais->setObjectName(QString::fromUtf8("stm_serais"));
+        stm_serais->setEnabled(false);
+        stm_serais->setMinimumSize(QSize(87, 20));
+
+        horizontalLayout->addWidget(stm_serais);
+
+
+        verticalLayout->addLayout(horizontalLayout);
+
+        horizontalLayout_2 = new QHBoxLayout();
+        horizontalLayout_2->setObjectName(QString::fromUtf8("horizontalLayout_2"));
+        label_2 = new QLabel(layoutWidget);
+        label_2->setObjectName(QString::fromUtf8("label_2"));
+
+        horizontalLayout_2->addWidget(label_2);
+
+        version = new QLineEdit(layoutWidget);
+        version->setObjectName(QString::fromUtf8("version"));
+        version->setEnabled(false);
+
+        horizontalLayout_2->addWidget(version);
+
+
+        verticalLayout->addLayout(horizontalLayout_2);
+
+        progressBar = new QProgressBar(layoutWidget);
         progressBar->setObjectName(QString::fromUtf8("progressBar"));
         progressBar->setEnabled(true);
         progressBar->setValue(0);
 
         verticalLayout->addWidget(progressBar);
 
-        Start = new QPushButton(centralwidget);
+        Start = new QPushButton(layoutWidget);
         Start->setObjectName(QString::fromUtf8("Start"));
         Start->setEnabled(false);
 
         verticalLayout->addWidget(Start);
 
-        horizontalLayout_3 = new QHBoxLayout();
-        horizontalLayout_3->setObjectName(QString::fromUtf8("horizontalLayout_3"));
+        not_connected = new QLabel(layoutWidget);
+        not_connected->setObjectName(QString::fromUtf8("not_connected"));
+        not_connected->setEnabled(false);
 
-        verticalLayout->addLayout(horizontalLayout_3);
-
-
-        horizontalLayout_2->addLayout(verticalLayout);
+        verticalLayout->addWidget(not_connected);
 
         EMA_V2Class->setCentralWidget(centralwidget);
         menubar = new QMenuBar(EMA_V2Class);
         menubar->setObjectName(QString::fromUtf8("menubar"));
-        menubar->setGeometry(QRect(0, 0, 379, 21));
+        menubar->setGeometry(QRect(0, 0, 250, 21));
         EMA_V2Class->setMenuBar(menubar);
         statusbar = new QStatusBar(EMA_V2Class);
         statusbar->setObjectName(QString::fromUtf8("statusbar"));
@@ -136,13 +145,14 @@ public:
 
     void retranslateUi(QMainWindow *EMA_V2Class)
     {
-        EMA_V2Class->setWindowTitle(QApplication::translate("EMA_V2Class", "Module", nullptr));
-        TextEdit_Clear->setText(QApplication::translate("EMA_V2Class", "TextEdit_Clear", nullptr));
+        EMA_V2Class->setWindowTitle(QApplication::translate("EMA_V2Class", "Oktanta", nullptr));
         STM_IP->setText(QApplication::translate("EMA_V2Class", "STM IP Change", nullptr));
-        Info->setText(QApplication::translate("EMA_V2Class", "Info", nullptr));
         Read->setText(QApplication::translate("EMA_V2Class", "Read", nullptr));
         Write->setText(QApplication::translate("EMA_V2Class", "Write", nullptr));
-        Start->setText(QApplication::translate("EMA_V2Class", "START", nullptr));
+        label->setText(QApplication::translate("EMA_V2Class", " STM serias         ", nullptr));
+        label_2->setText(QApplication::translate("EMA_V2Class", " Program version", nullptr));
+        Start->setText(QApplication::translate("EMA_V2Class", "Leave bootloader mode", nullptr));
+        not_connected->setText(QString());
     } // retranslateUi
 
 };

@@ -21,8 +21,8 @@ QT_BEGIN_MOC_NAMESPACE
 QT_WARNING_PUSH
 QT_WARNING_DISABLE_DEPRECATED
 struct qt_meta_stringdata_Start_dop_window_t {
-    QByteArrayData data[9];
-    char stringdata0[71];
+    QByteArrayData data[8];
+    char stringdata0[79];
 };
 #define QT_MOC_LITERAL(idx, ofs, len) \
     Q_STATIC_BYTE_ARRAY_DATA_HEADER_INITIALIZER_WITH_OFFSET(len, \
@@ -32,18 +32,18 @@ struct qt_meta_stringdata_Start_dop_window_t {
 static const qt_meta_stringdata_Start_dop_window_t qt_meta_stringdata_Start_dop_window = {
     {
 QT_MOC_LITERAL(0, 0, 16), // "Start_dop_window"
-QT_MOC_LITERAL(1, 17, 15), // "send_start_pack"
-QT_MOC_LITERAL(2, 33, 0), // ""
-QT_MOC_LITERAL(3, 34, 5), // "char*"
-QT_MOC_LITERAL(4, 40, 1), // "a"
-QT_MOC_LITERAL(5, 42, 1), // "b"
-QT_MOC_LITERAL(6, 44, 13), // "on_OK_clicked"
-QT_MOC_LITERAL(7, 58, 8), // "get_info"
-QT_MOC_LITERAL(8, 67, 3) // "msg"
+QT_MOC_LITERAL(1, 17, 17), // "send_start_adress"
+QT_MOC_LITERAL(2, 35, 0), // ""
+QT_MOC_LITERAL(3, 36, 8), // "uint32_t"
+QT_MOC_LITERAL(4, 45, 6), // "adress"
+QT_MOC_LITERAL(5, 52, 13), // "on_OK_clicked"
+QT_MOC_LITERAL(6, 66, 8), // "get_info"
+QT_MOC_LITERAL(7, 75, 3) // "msg"
 
     },
-    "Start_dop_window\0send_start_pack\0\0"
-    "char*\0a\0b\0on_OK_clicked\0get_info\0msg"
+    "Start_dop_window\0send_start_adress\0\0"
+    "uint32_t\0adress\0on_OK_clicked\0get_info\0"
+    "msg"
 };
 #undef QT_MOC_LITERAL
 
@@ -61,18 +61,18 @@ static const uint qt_meta_data_Start_dop_window[] = {
        1,       // signalCount
 
  // signals: name, argc, parameters, tag, flags
-       1,    2,   29,    2, 0x06 /* Public */,
+       1,    1,   29,    2, 0x06 /* Public */,
 
  // slots: name, argc, parameters, tag, flags
-       6,    0,   34,    2, 0x08 /* Private */,
-       7,    1,   35,    2, 0x08 /* Private */,
+       5,    0,   32,    2, 0x08 /* Private */,
+       6,    1,   33,    2, 0x08 /* Private */,
 
  // signals: parameters
-    QMetaType::Void, 0x80000000 | 3, QMetaType::Int,    4,    5,
+    QMetaType::Void, 0x80000000 | 3,    4,
 
  // slots: parameters
     QMetaType::Void,
-    QMetaType::Void, QMetaType::QString,    8,
+    QMetaType::Void, QMetaType::QString,    7,
 
        0        // eod
 };
@@ -83,7 +83,7 @@ void Start_dop_window::qt_static_metacall(QObject *_o, QMetaObject::Call _c, int
         auto *_t = static_cast<Start_dop_window *>(_o);
         Q_UNUSED(_t)
         switch (_id) {
-        case 0: _t->send_start_pack((*reinterpret_cast< char*(*)>(_a[1])),(*reinterpret_cast< int(*)>(_a[2]))); break;
+        case 0: _t->send_start_adress((*reinterpret_cast< uint32_t(*)>(_a[1]))); break;
         case 1: _t->on_OK_clicked(); break;
         case 2: _t->get_info((*reinterpret_cast< QString(*)>(_a[1]))); break;
         default: ;
@@ -91,8 +91,8 @@ void Start_dop_window::qt_static_metacall(QObject *_o, QMetaObject::Call _c, int
     } else if (_c == QMetaObject::IndexOfMethod) {
         int *result = reinterpret_cast<int *>(_a[0]);
         {
-            using _t = void (Start_dop_window::*)(char * , int );
-            if (*reinterpret_cast<_t *>(_a[1]) == static_cast<_t>(&Start_dop_window::send_start_pack)) {
+            using _t = void (Start_dop_window::*)(uint32_t );
+            if (*reinterpret_cast<_t *>(_a[1]) == static_cast<_t>(&Start_dop_window::send_start_adress)) {
                 *result = 0;
                 return;
             }
@@ -141,9 +141,9 @@ int Start_dop_window::qt_metacall(QMetaObject::Call _c, int _id, void **_a)
 }
 
 // SIGNAL 0
-void Start_dop_window::send_start_pack(char * _t1, int _t2)
+void Start_dop_window::send_start_adress(uint32_t _t1)
 {
-    void *_a[] = { nullptr, const_cast<void*>(reinterpret_cast<const void*>(&_t1)), const_cast<void*>(reinterpret_cast<const void*>(&_t2)) };
+    void *_a[] = { nullptr, const_cast<void*>(reinterpret_cast<const void*>(&_t1)) };
     QMetaObject::activate(this, &staticMetaObject, 0, _a);
 }
 QT_WARNING_POP

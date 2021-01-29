@@ -1,16 +1,71 @@
 #include "plata_read_write.h"
 #include "stdint.h"
 #include <QDebug>
+#include <QtCore>
 
 plata_read_write::plata_read_write(QObject *parent) : QObject(parent){
     connect(&timer_clear, SIGNAL(timeout()), this, SLOT(First_sending()));
     connect(&timer_repead_writing, SIGNAL(timeout()), this, SLOT(Repead_sending()));
     connect(&timer_repead_reading, SIGNAL(timeout()), this, SLOT(Repead_fl_sending()));
+    //поток для udp
+    handlerThread = new QThread();// создается ни с чем не связанный объект потока
+    _udp = new ThreadUdp(50);  // IPadr
+    connect(handlerThread, SIGNAL(started()), _udp, SLOT(process()));
+    connect(_udp, SIGNAL(finished()), handlerThread, SLOT(quit()));
+    connect(_udp, SIGNAL(finished()), _udp, SLOT(deleteLater()));
+    connect(handlerThread, SIGNAL(finished()), handlerThread,SLOT(deleteLater()));
+    _udp->connectToServer(10000);//Port
+    _udp->moveToThread(handlerThread); // объект помещается в поток
+    handlerThread->start(); // поток запускается (теперь наш объект обрабатывает всякие сообщения в отдельном потоке)
 
+    //передача сообщений от платы
+    connect(_udp, SIGNAL(UdpPack_rcv(char*,quint32 )), this, SLOT(STM_responces(char*,quint32 )));
+    //отправка пакета запись/чтение/очистка сектора/проверку питания
+    connect(this, SIGNAL( send_command(char* , int)), _udp, SLOT(send_pack(char* ,int)) );
+    //смена IP
+    connect(this, SIGNAL( ip_change(QString)), _udp, SLOT(change_ip(QString)) );
 }
 plata_read_write::~plata_read_write(){
     if(rd_arraPtr!=0){delete[] rd_arraPtr;}}
 
+//-------------------------START-----------------------------
+#define START_ADRESS 0x08010000;
+void plata_read_write::Start_struct(void){
+    wr_rd_struct.command=0011;
+    wr_rd_struct.addr=START_ADRESS;
+    emit send_command((char*) &wr_rd_struct, sizeof(wr_rd_struct));
+}
+//--------------------------IP-------------------------------
+void plata_read_write::Change_ip(QString ip){
+    emit ip_change(ip);
+}
+//-------------------------info------------------------------
+void plata_read_write::Check_info(){
+    wr_rd_struct.command=1111;
+    emit send_command((char*) &wr_rd_struct, 12);
+}
+//-------------------------power-----------------------------
+void plata_read_write::Check_Power(quint32 header){
+    power_counter=0;
+}
+void plata_read_write::Send_Check_Power(){
+    wr_rd_struct.command=0111;
+    emit send_command((char*) &wr_rd_struct, 12);
+
+    if(power_counter>1){emit buttons_enable(false);}
+    if(power_counter>5){
+        send_info_text((char*) "");
+        send_info_text((char*) "");
+        send_not_connected_text((char*) "    Plata isn't connected!");
+        first_plata_on=0;}
+    else{
+        emit buttons_enable(true);
+        if(first_plata_on==0){
+            first_plata_on=1;
+            Check_info();}
+        }
+    power_counter++;
+}
 //-------------------read_functions------------------------
 
 //функция повторной отправки (если овтет от платы не пришел в течение 3 сек)
@@ -66,7 +121,7 @@ void plata_read_write::STM_responces(char *Data,quint32 sizedata){
 
     //проверка headerов ответа от платы
     if (data_on_plata->acception_header==4){
-        send_udp_check_power_flag(data_on_plata->acception_header); //power
+        Check_Power(4); //power
         return;}
     else{
         if(data_on_plata->acception_header==2){
@@ -76,7 +131,7 @@ void plata_read_write::STM_responces(char *Data,quint32 sizedata){
             Flags(3);//clear
             return;}
         if (data_on_plata->acception_header!=5 && check_size!=0){
-            send_udp_messangers((char*) Data); //сообщение от платы
+             emit send_info_text((char*) Data);//сообщение от платы
             return;}
     }
     //запись данных в массив
@@ -125,7 +180,7 @@ void plata_read_write::Flags(quint32 header){
 
     if(flag_to_write==1){
         if(segment_size>0 && count_pakets>0)
-            {Data_writing();}
+        {Data_writing();}
 
         if(segment_size<=0){
             timer_repead_writing.stop();

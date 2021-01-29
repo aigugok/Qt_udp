@@ -3,8 +3,6 @@
 #include "stdint.h"
 #include <QDebug>
 #include <QFile>
-//#include "ui_UDP_test.h"
-//#include "UDP_test.h"
 
 
 class Write_hex : public QObject {
